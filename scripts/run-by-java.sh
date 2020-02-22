@@ -10,15 +10,19 @@ source "$THIS_FILE_PATH/common-function.sh"
 # ##################  config  ##################
 PROJECT_PATH=$(path_resolve "$THIS_FILE_PATH" "../")
 des=$(path_resolve "$PROJECT_PATH" "bin") # class file positon
-class="Hello.class" # class file name and class name
-package="" # pckage name which class belong to
+class="Hello.class"                       # class file name and class name
+package=""                                # pckage name which class belong to
 
 # ##################  function  ##################
 function main() {
-  class=$(echo "$class" | sed "s/.class$//")
   if [ "${package}" ]; then
+    class=$(echo "$class" | sed "s/.class$//")
     file="${package}.${class}"
+  else
+    class=$(echo "$class" | sed "s/.class$//")
+    file="${class}"
   fi
+  echo "java -cp \"${des}\" \"${file}\""
   java -cp "${des}" "${file}"
 }
 
@@ -38,7 +42,13 @@ note
 #: <<note
 des=$(path_resolve "$PROJECT_PATH" "bin")
 class="Hello.class"
-package="log"
+package="" #"log"
+main
+
+des=$(path_resolve "$PROJECT_PATH" "build")
+main
+
+des=$(path_resolve "$PROJECT_PATH" ".")
 main
 #note
 
