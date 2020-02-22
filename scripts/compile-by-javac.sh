@@ -11,14 +11,12 @@ source "$THIS_FILE_PATH/common-function.sh"
 PROJECT_PATH=$(path_resolve "$THIS_FILE_PATH" "../")
 src=$(path_resolve "$PROJECT_PATH" ".")
 file="Hello.java"
-des=$(path_resolve "$PROJECT_PATH" "build")  # class file positon
-class="Hello.class" # class file name and class name
-package="" # pckage name which class belong to
-
-
+des=$(path_resolve "$PROJECT_PATH" "build") # class file positon
+class="Hello.class"                         # class file name and class name
+package=""                                  # pckage name which class belong to
 
 # ##################  function  ##################
-function caculate_some_var(){
+function caculate_some_var() {
   CLASS_FILE="${des}/${class}"
   if [ "${package}" ]; then
     CLASS_FILE="${des}/${package}/${class}"
@@ -61,7 +59,10 @@ function rmClassFile() {
     rm -rf "$des"
   fi
 }
-
+function main() {
+  echo "javac -sourcepath \"$src\" \"$file\" -d \"$des\""
+  javac -sourcepath "$src" "$file" -d "$des"
+}
 # ##################  run  ##################
 # main
 
@@ -70,20 +71,27 @@ function rmClassFile() {
 src=$(path_resolve "$PROJECT_PATH" ".")
 file="Hello.java"
 des=$(path_resolve "$PROJECT_PATH" "bin")
-package="log"
+package="" #log
 caculate_some_var
 rmClassFile
-test "javac -sourcepath \"$src\" \"$file\"  -d \"$des\" " "true" "getOuput"
+main
 
 src=$(path_resolve "$PROJECT_PATH" ".")
 file="Hello.java"
-package="log"
+package="" #log
 des=$(path_resolve "$PROJECT_PATH" "build")
 caculate_some_var
 rmClassFile
-test "javac -sourcepath \"$src\" \"$file\"  -d \"$des\" " "true" "getOuput"
-#NOTE
+main
 
+src=$(path_resolve "$PROJECT_PATH" ".")
+file="Hello.java"
+package="" #log
+des=$(path_resolve "$PROJECT_PATH" ".")
+caculate_some_var
+rmClassFile
+main
+#NOTE
 
 # ##################  test  ##################
 
