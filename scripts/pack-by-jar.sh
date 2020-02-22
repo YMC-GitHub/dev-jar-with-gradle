@@ -1,0 +1,109 @@
+#!/bin/sh
+
+THIS_FILE_PATH=$(
+  cd $(dirname $0)
+  pwd
+)
+source "$THIS_FILE_PATH/path_resolve.sh"
+source "$THIS_FILE_PATH/common-function.sh"
+
+# ##################  config  ##################
+PROJECT_PATH=$(path_resolve "$THIS_FILE_PATH" "../")
+
+src=$(path_resolve "$PROJECT_PATH" "bin") # class file positon
+class="Hello.class"                       # class file name and class name
+package=""                                # pckage name which class belong to
+des=$(path_resolve "$PROJECT_PATH" "bin") # where genrate x.jar file to
+# ##################  function  ##################
+function main() {
+  if [ "${package}" ]; then
+    class=$(echo "$class" | sed "s/.class$//")
+    file="${package}.${class}"
+  else
+    class=$(echo "$class" | sed "s/.class$//")
+    file="${class}"
+  fi
+  #rm -rf "${des}/${file}.jar"
+  cd "${src}"
+  echo "jar cf \"${des}/${file}.jar\" \"${file}.class\""
+  #jar cf "${des}/${file}.jar" "${src}/${file}.class"
+  jar cf "${des}/${file}.jar" "${file}.class"
+
+  echo "java -cp \"${des}/${file}.jar\" \"${file}\""
+  java -cp "${des}/${file}.jar" "${file}"
+}
+
+# ##################  run  ##################
+# main
+
+# ##################  demo  ##################
+PROJECT_PATH=$(path_resolve "$THIS_FILE_PATH" "../")
+src=$(path_resolve "$PROJECT_PATH" "bin") # class file positon
+class="Hello.class"                       # class file name and class name
+package=""                                # pckage name which class belong to
+des=$(path_resolve "$PROJECT_PATH" "bin") # where genrate x.jar file to
+main
+
+src=$(path_resolve "$PROJECT_PATH" "build") # class file positon
+des=$(path_resolve "$PROJECT_PATH" "build") # where genrate x.jar file to
+main
+
+src=$(path_resolve "$PROJECT_PATH" ".") # class file positon
+des=$(path_resolve "$PROJECT_PATH" ".") # where genrate x.jar file to
+main
+
+src=$(path_resolve "$PROJECT_PATH" ".")     # class file positon
+des=$(path_resolve "$PROJECT_PATH" "build") # where genrate x.jar file to
+main
+
+: <<NOTE
+# 建包（打包）
+#2 某一个类
+file="Hello.class"
+file=$(echo "$file" | sed "s/.class$//")
+jar cf "${file}.jar" "$file.class"
+#2 某个目录
+jar cf "${file}.jar" "$file"
+
+# 看包（查看）
+jar tvf "${file}.jar"
+#jar tvf "${file}.jar"> "${file}.txt"
+
+# 解包
+jar xvf "${file}.jar"
+#or 解压
+#unzip "${file}.jar" -d "${file}"
+#rm -rf "${file}"
+
+# 改包
+#2 添加文件
+jar uf "${file}.jar" "${file}.java"
+#2 生成索引
+jar i "${file}.jar"
+#jar tvf "${file}.jar" | grep "INDEX.LIST"
+
+#2 添加清单文件
+cat > manifest.mf <<EOF
+Manifest-Version: 1.0.0
+Main-Class: $file
+Class-Path: Hello.jar
+EOF
+jar cfm "${file}.jar" manifest.mf "$file.class"
+#2 查看清单文件
+jar -xvf "${file}.jar" META-INF/MANIFEST.MF
+cat META-INF/MANIFEST.MF
+rm -rf META-INF
+#2 更新清单文件
+jar cfm "${file}.jar" manifest.mf "$file.class"
+#2 运行可执行包
+java -jar "${file}.jar" #需在清单文件中指定Class-Path
+#java -cp "${file}.jar" "Hello"
+
+# 运包
+java -cp "${file}.jar" "${file}"
+#java -jar "${file}.jar" #需在清单文件中指定Class-Path
+NOTE
+
+## file-usage
+# ./scripts/pack-by-jar.sh
+#
