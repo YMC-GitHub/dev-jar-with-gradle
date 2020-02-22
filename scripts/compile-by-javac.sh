@@ -6,14 +6,15 @@ THIS_FILE_PATH=$(
 )
 source "$THIS_FILE_PATH/path_resolve.sh"
 source "$THIS_FILE_PATH/common-function.sh"
+source "$THIS_FILE_PATH/class-config.sh"
 
 # ##################  config  ##################
 PROJECT_PATH=$(path_resolve "$THIS_FILE_PATH" "../")
 src=$(path_resolve "$PROJECT_PATH" ".")
-file="Hello.java"
+file="${CLASS_NAME}.java"
 des=$(path_resolve "$PROJECT_PATH" "build") # class file positon
-class="Hello.class"                         # class file name and class name
-package=""                                  # pckage name which class belong to
+class="${CLASS_NAME}.class"                 # class file name and class name
+package="${PACKAGE_NAME}"                   # pckage name which class belong to
 
 # ##################  function  ##################
 function caculate_some_var() {
@@ -69,24 +70,18 @@ function main() {
 # ##################  demo  ##################
 #: <<NOTE
 src=$(path_resolve "$PROJECT_PATH" ".")
-file="Hello.java"
 des=$(path_resolve "$PROJECT_PATH" "bin")
-package="" #log
 caculate_some_var
 rmClassFile
 main
 
 src=$(path_resolve "$PROJECT_PATH" ".")
-file="Hello.java"
-package="" #log
 des=$(path_resolve "$PROJECT_PATH" "build")
 caculate_some_var
 rmClassFile
 main
 
 src=$(path_resolve "$PROJECT_PATH" ".")
-file="Hello.java"
-package="" #log
 des=$(path_resolve "$PROJECT_PATH" ".")
 caculate_some_var
 rmClassFile

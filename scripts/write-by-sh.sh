@@ -6,14 +6,16 @@ THIS_FILE_PATH=$(
 )
 source "$THIS_FILE_PATH/path_resolve.sh"
 source "$THIS_FILE_PATH/common-function.sh"
+source "$THIS_FILE_PATH/class-config.sh"
 
 # ##################  config  ##################
 PROJECT_PATH=$(path_resolve "$THIS_FILE_PATH" "../")
 
 #src=$(path_resolve "$PROJECT_PATH" "bin") # java file positon
-file="Hello.java"                         # java file name and class name
-package=""                                # pckage name which class belong to
+file="${CLASS_NAME}.java"                 # java file name and class name
+package="${PACKAGE_NAME}"                 # pckage name which class belong to
 des=$(path_resolve "$PROJECT_PATH" "bin") # where genrate x.java file to
+
 # ##################  function  ##################
 function main() {
   local result=""
@@ -66,8 +68,6 @@ EOF
 # main
 
 # ##################  demo  ##################
-file="Hello.java"                       # java file name and class name
-package=""                              # pckage name which class belong to
 des=$(path_resolve "$PROJECT_PATH" ".") # where genrate x.java file to
 main
 ## file-usage

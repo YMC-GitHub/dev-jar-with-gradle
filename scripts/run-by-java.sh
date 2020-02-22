@@ -6,12 +6,13 @@ THIS_FILE_PATH=$(
 )
 source "$THIS_FILE_PATH/path_resolve.sh"
 source "$THIS_FILE_PATH/common-function.sh"
+source "$THIS_FILE_PATH/class-config.sh"
 
 # ##################  config  ##################
 PROJECT_PATH=$(path_resolve "$THIS_FILE_PATH" "../")
 des=$(path_resolve "$PROJECT_PATH" "bin") # class file positon
-class="Hello.class"                       # class file name and class name
-package=""                                # pckage name which class belong to
+class="${CLASS_NAME}.class"               # class file name and class name
+package="${PACKAGE_NAME}"                 # pckage name which class belong to
 
 # ##################  function  ##################
 function main() {
@@ -33,16 +34,12 @@ function main() {
 # 无包的类
 : <<note
 des=$(path_resolve "$PROJECT_PATH" "bin")
-class="Hello.class"
-package=""
 main
 note
 
 # 带包的类
 #: <<note
 des=$(path_resolve "$PROJECT_PATH" "bin")
-class="Hello.class"
-package="" #"log"
 main
 
 des=$(path_resolve "$PROJECT_PATH" "build")
