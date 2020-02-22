@@ -19,12 +19,11 @@ des=$(path_resolve "$PROJECT_PATH" "bin") # where genrate x.java file to
 # ##################  function  ##################
 function main() {
   local result=""
-
+  : <<note
   if [ "${package}" ]; then
-    file="${package}.${file}"
-  else
-    file="${file}"
+    des="${des}${package}"
   fi
+note
 
   if [ "${package}" ]; then
     result=$(
