@@ -19,19 +19,27 @@ des=$(path_resolve "$PROJECT_PATH" "bin") # where genrate x.jar file to
 function main() {
   if [ "${package}" ]; then
     class=$(echo "$class" | sed "s/.class$//")
-    file="${package}.${class}"
+    #file="${package}.${class}"
+    file="${class}"
+    package_path=$(echo "$package" | sed "s|\.|/|g")
+    src="${src}/${package_path}"
   else
     class=$(echo "$class" | sed "s/.class$//")
     file="${class}"
   fi
   #rm -rf "${des}/${file}.jar"
   cd "${src}"
-  echo "jar cf \"${des}/${file}.jar\" \"${file}.class\""
-  #jar cf "${des}/${file}.jar" "${src}/${file}.class"
-  jar cf "${des}/${file}.jar" "${file}.class"
+  echo "jar cf \"${des}/${class}.jar\" \"${file}.class\""
+  #jar cf "${des}/${class}.jar" "${src}/${file}.class"
+  jar cf "${des}/${class}.jar" "${file}.class"
 
-  echo "java -cp \"${des}/${file}.jar\" \"${file}\""
-  java -cp "${des}/${file}.jar" "${file}"
+  if [ "${package}" ]; then
+    echo "java -cp \"${des}\" \"${package}.${file}\""
+    java -cp "${des}" "${package}.${file}"
+  else
+    echo "java -cp \"${des}/${class}.jar\" \"${file}\""
+    java -cp "${des}/${class}.jar" "${file}"
+  fi
 }
 
 # ##################  run  ##################

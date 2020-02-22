@@ -16,9 +16,12 @@ package="${PACKAGE_NAME}"                 # pckage name which class belong to
 
 # ##################  function  ##################
 function main() {
+  local package_path=""
   if [ "${package}" ]; then
     class=$(echo "$class" | sed "s/.class$//")
     file="${package}.${class}"
+    #package_path=$(echo "$package" | sed "s|\.|/|g")
+    #des="${des}/${package_path}"
   else
     class=$(echo "$class" | sed "s/.class$//")
     file="${class}"
@@ -31,14 +34,6 @@ function main() {
 # main
 
 # ##################  demo  ##################
-# 无包的类
-: <<note
-des=$(path_resolve "$PROJECT_PATH" "bin")
-main
-note
-
-# 带包的类
-#: <<note
 des=$(path_resolve "$PROJECT_PATH" "bin")
 main
 
@@ -47,7 +42,6 @@ main
 
 des=$(path_resolve "$PROJECT_PATH" ".")
 main
-#note
 
 ## file-usage
 # ./scripts/run-by-java.sh
