@@ -4,7 +4,7 @@
 ## 创建工程
 ```sh
 gradle init --type java-application
-
+gradle init --type java-library
 ```
 
 ## 执行任务
@@ -55,4 +55,8 @@ https://docs.gradle.org/6.1.1/javadoc/index.html?overview-summary.html
 https://docs.gradle.org/current/dsl/index.html
 #
 https://docs.gradle.org/6.1.1/userguide/groovy_build_script_primer.html
+#Gradle-构建环境
+https://docs.gradle.org/current/userguide/build_environment.html
+#Gradle-签名文件
+https://docs.gradle.org/6.1.1/userguide/signing_plugin.html#signing_plugin
 ```
