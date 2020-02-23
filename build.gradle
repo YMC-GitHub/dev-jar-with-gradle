@@ -1,5 +1,16 @@
-// tell gradle to make .exe file
-apply plugin: 'application'
+// tell gradle to make .jar file
+//apply plugin: 'java'
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+group = 'ymc.java.starter'
+//version = '1.0.0-SNAPSHOT' //for dev
+version = '1.0.0' //for publish (pro)
+
+//sourceCompatibility = 1.8
+//targetCompatibility = 1.8
 
 // tell gradle where to file .jar package ?
 repositories {
@@ -12,7 +23,7 @@ repositories {
         //如果目录中木有，则找url对应的maven仓库，下面是阿里的maven仓库，速度杠杆的。
         url "http://maven.aliyun.com/nexus/content/groups/public/"
     }
-    //mavenCentral()    //如果都木有，则取maven的官方仓库吧，只是这个速度要看人品
+    mavenCentral()    //如果都木有，则取maven的官方仓库吧，只是这个速度要看人品
 }
 
 // tell gradle which his dep is ?
@@ -24,4 +35,21 @@ dependencies {
 }
 
 // tell gradle which entry class is?
-mainClassName = 'log.Hello' // here is src/main/java/log/Hello.class
+jar {   //当然若是我们将此jar包提交给别人使用而不是运行，则当删除或者注释掉此 jar 部分
+    manifest { //配置 Manifest文档属性
+        attributes 'Main-Class': 'ymc.java.starter.HelloWorld' // here is src/main/java/${package_name}/${class_name}.class
+    }
+}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url = uri("${buildDir}/publishing-repository")
+        }
+    }
+}
