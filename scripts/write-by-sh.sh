@@ -7,14 +7,20 @@ THIS_FILE_PATH=$(
 source "$THIS_FILE_PATH/path_resolve.sh"
 source "$THIS_FILE_PATH/common-function.sh"
 source "$THIS_FILE_PATH/class-config.sh"
+source "$THIS_FILE_PATH/src.construrot.config.sh"
 
 # ##################  config  ##################
 PROJECT_PATH=$(path_resolve "$THIS_FILE_PATH" "../")
 
 #src=$(path_resolve "$PROJECT_PATH" "bin") # java file positon
-file="${CLASS_NAME}.java"                 # java file name and class name
+file="${CLASS_NAME}"                      # java file name and class name
 package="${PACKAGE_NAME}"                 # pckage name which class belong to
 des=$(path_resolve "$PROJECT_PATH" "bin") # where genrate x.java file to
+
+test_suffix=""
+if [ $CODE_TYPE = "test" ]; then
+  test_suffix="Test"
+fi
 
 # ##################  function  ##################
 function main() {
@@ -48,7 +54,7 @@ EOF
 $result
 
 // create my class
-public class Hello {
+public class $CLASS_NAME${test_suffix} {
   // private static Logger logger = Logger.getLogger(Hello.class);
 
   public static void main(String[] args) {
@@ -58,8 +64,22 @@ public class Hello {
 }
 EOF
   )
-  echo "echo \"\$result\" >\"${des}/${file}\""
-  echo "$result" >"${des}/${file}"
+
+  if [[ $CODE_TYPE = "test" && "${test_path}" ]]; then
+    des="${des}/${test_path}"
+    file="${file}${test_suffix}"
+  elif [ "${src_path}" ]; then
+    des="${des}/${src_path}"
+  fi
+
+  if [ "${package}" ]; then
+    package_path=$(echo "$package" | sed "s|\.|/|g")
+    des="${des}/${package_path}"
+  fi
+
+  mkdir -p "${des}"
+  echo "echo \"\$result\" >\"${des}/${file}.java\""
+  echo "$result" >"${des}/${file}.java"
 
 }
 

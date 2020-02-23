@@ -66,7 +66,8 @@ main
 : <<NOTE
 # 建包（打包）
 #2 某一个类
-file="Hello.class"
+CLASS_NAME="Hello"
+file="${CLASS_NAME}.class"
 file=$(echo "$file" | sed "s/.class$//")
 jar cf "${file}.jar" "$file.class"
 #2 某个目录
@@ -90,10 +91,16 @@ jar i "${file}.jar"
 #jar tvf "${file}.jar" | grep "INDEX.LIST"
 
 #2 添加清单文件
+PACKAGE_NAME="ymc.java.starter"
+CLASS_NAME="Hello"
+MAIN_CLASS="${CLASS_NAME}"
+#if [ "${PACKAGE_NAME}" ]; then
+#  MAIN_CLASS="${PACKAGE_NAME}.${MAIN_CLASS}"
+#fi
 cat > manifest.mf <<EOF
 Manifest-Version: 1.0.0
-Main-Class: $file
-Class-Path: Hello.jar
+Main-Class: $MAIN_CLASS
+Class-Path: $CLASS_NAME.jar
 EOF
 jar cfm "${file}.jar" manifest.mf "$file.class"
 #2 查看清单文件
@@ -104,7 +111,7 @@ rm -rf META-INF
 jar cfm "${file}.jar" manifest.mf "$file.class"
 #2 运行可执行包
 java -jar "${file}.jar" #需在清单文件中指定Class-Path
-#java -cp "${file}.jar" "Hello"
+#java -cp "${file}.jar" "${file}"
 
 # 运包
 java -cp "${file}.jar" "${file}"

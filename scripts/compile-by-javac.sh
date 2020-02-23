@@ -73,13 +73,13 @@ src=$(path_resolve "$PROJECT_PATH" ".")
 des=$(path_resolve "$PROJECT_PATH" "bin")
 caculate_some_var
 rmClassFile
-main
+#main
 
 src=$(path_resolve "$PROJECT_PATH" ".")
 des=$(path_resolve "$PROJECT_PATH" "build")
 caculate_some_var
 rmClassFile
-main
+#main
 
 src=$(path_resolve "$PROJECT_PATH" ".")
 des=$(path_resolve "$PROJECT_PATH" ".")
