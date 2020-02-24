@@ -1,28 +1,44 @@
+// use some secret data to config
+apply from: rootDir.canonicalPath + '/secret/sign-file.gradle'
+apply from: rootDir.canonicalPath + '/secret/publish-to-sona.gradle'
+
 // tell gradle to make .jar file
-//apply plugin: 'java'
+apply plugin: 'java'
+// tell gradle to use signing plugin to sign file
+apply plugin: 'signing'
+// tell gradle to use maven-publish plugin to publish to maven repo
+apply plugin: 'maven-publish'
+
+/*
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'signing'
 }
+*/
 
 group = 'ymc.java.starter'
 //version = '1.0.0-SNAPSHOT' //for dev
 version = '1.0.0' //for publish (pro)
 
-//sourceCompatibility = 1.8
-//targetCompatibility = 1.8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
-// tell gradle where to file .jar package ?
+// tell gradle where the file .jar package is?
 repositories {
+    /*local repo*/
     // find in dir `lib` in config path build.gradle
     flatDir {
         // 先看下build.gradle文件所在目录下的 libs目录中有没有
         dirs 'libs'
     }
+    //mavenLocal()
+    /*remote repo*/
     maven {
         //如果目录中木有，则找url对应的maven仓库，下面是阿里的maven仓库，速度杠杆的。
         url "http://maven.aliyun.com/nexus/content/groups/public/"
     }
+     /*central repo*/
     mavenCentral()    //如果都木有，则取maven的官方仓库吧，只是这个速度要看人品
 }
 
@@ -32,6 +48,7 @@ dependencies {
     compile 'log4j:log4j:1.2.17'
     // use jar name=junit version=4.11 to compile test file
     testCompile 'junit:junit:4.11'
+    //testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
 // tell gradle which entry class is?
@@ -40,16 +57,148 @@ jar {   //当然若是我们将此jar包提交给别人使用而不是运行，�
         attributes 'Main-Class': 'ymc.java.starter.HelloWorld' // here is src/main/java/${package_name}/${class_name}.class
     }
 }
+//gradle jar
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+/*
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+//gradle sourcesJar
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+//gradle javadocJar
+*/
+
 
 publishing {
     publications {
-        library(MavenPublication) {
+        mavenJava(MavenPublication) {
+            // groupId = project.group
+            // artifactId = project.name
+            // version = project.version
             from components.java
+
+            pom {
+                // 构件名称
+                // 区别于artifactId，可以理解为artifactName
+                name = 'My Library'
+                description = 'A concise description of my library'
+                url = 'https://github.com/YMC-GitHub/dev-jar-with-gradle'
+                properties = [
+                    myProp: "value",
+                    "prop.with.dots": "anotherValue"
+                ]
+                // set project Licenses name and his version
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                // set project developers msg
+                developers {
+                    developer {
+                        id = 'ymc'
+                        name = 'yemiancheng'
+                        email = 'ymc.github@gmail.com'
+                    }
+                }
+                // where is the version control repo address?
+                scm {
+                    connection = 'scm:git:git:github.com/YMC-GitHub/dev-jar-with-gradle.git'
+                    developerConnection = 'scm:git:ssh:github.com/YMC-GitHub/dev-jar-with-gradle.git'
+                    url = 'https://github.com/YMC-GitHub/dev-jar-with-gradle'
+                }
+            }
+
         }
     }
     repositories {
         maven {
-            url = uri("${buildDir}/publishing-repository")
+            // where it publish to?
+            /*local repo*/
+            /*
+            def localMavenRepo = new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+            url = uri(localMavenRepo)
+            */
+            /*
+            def releasesRepoUrl = "$buildDir/repos/releases"
+            def snapshotsRepoUrl = "$buildDir/repos/snapshots"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            */
+            // url = uri("${buildDir}/publishing-repository")
+            /*remote repo*/
+
+            //url = "https://mvnrepository.com/"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            credentials {
+                username sonatypeUsername
+                password sonatypePassword
+            }
+            /*
+            url = remoteUrl
+            credentials {
+                username = publishUserName
+                password = publishUserPassword
+            }
+            */
         }
     }
 }
+//gradle publish
+
+task showRepos {
+    doLast {
+        println "All repos:"
+        println repositories.collect { it.name }
+    }
+}
+//gradle showRepos
+
+
+// for sign files?
+signing {
+    // for publications mavenJava
+    sign publishing.publications.mavenJava
+}
+//gradle signMavenJavaPublication
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+    options.addStringOption("charset", "UTF-8")
+}
+//gradle javadoc
+
+//gradle ci -PisCI=true --quiet
+task printConfig {
+    doLast {
+        println "prin project config:"
+        println "The name of the project directory?${project.name}"
+        println "The absolute  path of the project?${project.path}"
+        println "The version of the project ?${project.version}"
+        println "The group of the project ?${project.group}"
+        println "The description of the project?${project.description}"
+        println "pc user home?${System.getProperty('user.home')}"
+    }
+}
+//gradle printConfig --quiet
+
+task caculateConfig {
+  ext.desc = "this is a desc pro for task caculateConfig"
+    doLast {
+        String someString = 'yemiancheng'
+        println "Original: $someString"
+        println "Upper case: ${someString.toUpperCase()}"
+        println caculateConfig.desc
+    }
+}
+//gradle caculateConfig --quiet

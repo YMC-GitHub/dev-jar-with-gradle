@@ -1,8 +1,8 @@
-# publish to maven repo
+# sign files
 
 ## desc
 
-push jar lib  to maven repo
+sign files with sign plugin
 
 ## content
 
@@ -10,17 +10,28 @@ push jar lib  to maven repo
 
 config for gradle config file `build.gradle` by hands(or run cmd):
 
-use maven-publish plugin?
+use sign plugin?
 
-set publishing task?
+set signing key id?
+
+set signing key secretKeyRingFile?
+
+set what to sign?
+
+to sign Publications ?
+
+set Conditional Signing?
 
 ### run some cmd
 ```sh
-./gradlew publish
-#gradle publish &&  ls build/publications
-#gradle publishPubNamePublicationToMavenLocal &&  ls ~/.m2/repository
+#sign a publication output
+gradle signMavenJavaPublication
 
-#gradle publishToMavenLocal
+#sign a configuration output
+
+#sign a task  output
+
+#sign pom files
 ```
 
 ## refer

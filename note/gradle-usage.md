@@ -16,6 +16,7 @@ gradle tasks --all
 gradle clean
 
 # 构建
+#2 only build not test
 gradle build -x test
 #2 打包？
 #gradle jar

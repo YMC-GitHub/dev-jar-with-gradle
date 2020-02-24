@@ -8,3 +8,24 @@
  */
 
 rootProject.name = 'dev-jar-with-gradle'
+
+// for build with scan
+/*
+gradleEnterprise {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+    }
+}
+//./gradlew build --scan | grep "https://gradle.com"
+*/
+
+
+// for sign file
+//v6.1.1-Could not set unknown property 'signing' for settings? add with "ext" prefix to set cunstom pro!
+// for pubilish to sona repo
+
+
+//--warning-mode all
+//--info
+//--debug

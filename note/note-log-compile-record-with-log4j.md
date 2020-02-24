@@ -20,7 +20,7 @@ config for log4j config file `log4j.properties` by hands(or run cmd):
 ```sh
 ./gradlew test
 #or
-#gradle test
+#gradle test 
 ```
 
 ## refer
